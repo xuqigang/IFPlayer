@@ -2,7 +2,7 @@
 //  IFPlayer.h
 //  IFPlayer
 //
-//  Created by Hanxiaojie on 2018/9/10.
+//  Created by Xuqigang on 2018/9/10.
 //  Copyright © 2018年 凤凰新媒体. All rights reserved.
 //  说明：该播放器不建议封装成单例
 
