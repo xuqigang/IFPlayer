@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class IFPlayer;
+@protocol IFPlayerDelegate <NSObject>
+
+//用户点击播放按钮的时候，才会走这个回调，单独调用IFPlayer 的start或者stop方法，则不会走此回调
+- (void)player:(IFPlayer*)player playbackState:(BOOL)isPlay;
+
+@end
+
 @interface IFPlayer : NSObject
 
+@property (nonatomic, weak) id<IFPlayerDelegate> delegate;
 
 /**
  创建播放器
@@ -39,7 +48,6 @@
 - (void)updatePreview;
 
 - (void)play;
-
 - (void)stop;
 
 //释放播放器资源

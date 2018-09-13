@@ -15,6 +15,7 @@
 
 - (void)videoLoaderSuccessed:(IFVideoLoader*)videoLoader;
 - (void)videoLoaderFailed:(IFVideoLoader*)videoLoader;
+- (void)videoLoaderStartPlayback:(IFVideoLoader*)videoLoader;
 - (void)videoLoaderPlaybackFinished:(IFVideoLoader*)videoLoader;
 - (void)videoLoader:(IFVideoLoader*)videoLoader currentPlayProgress:(CGFloat)seconds;
 

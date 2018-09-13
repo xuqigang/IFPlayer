@@ -9,7 +9,7 @@
 #import "VideoListVC.h"
 #import "VideoCell.h"
 
-@interface VideoListVC ()<UITableViewDelegate,UITableViewDataSource>
+@interface VideoListVC ()<UITableViewDelegate,UITableViewDataSource,VideoCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *tableViewDataSource;
 @end
@@ -88,74 +88,34 @@
     cell = (VideoCell*)[tableView dequeueReusableCellWithIdentifier:@"VideoCell"];
     if (self.tableViewDataSource.count > indexPath.row) {
         [cell setupCell:self.tableViewDataSource[indexPath.row]];
+        cell.delegate = self;
     } else {
         [cell setupCell:nil];
+        cell.delegate = nil;
     }
     return cell;
+}
+#pragma mark VideoCellDelegate
+- (void)videoCell:(VideoCell*)videoCell didVideoStateChanged:(BOOL)isPlay{
+    //用户点击播放按钮时，关闭掉其它cell上的视频
+    NSArray <VideoCell*> *cells = [self.tableView visibleCells];
+    [cells enumerateObjectsUsingBlock:^(VideoCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (videoCell != obj){
+            [obj stopVideo];
+        }
+    }];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-#pragma mark - orientationChanged
-- (void)orientationChanged:(NSNotification*)notification{
-    NSLog(@"旋转之前 ：%lf %lf",self.view.frame.size.width,self.view.frame.size.height);
-    UIDevice *device = [UIDevice currentDevice];
-    switch (device.orientation) {
-        case UIDeviceOrientationFaceUp:
-            NSLog(@"螢幕朝上平躺");
-            break;
-            
-        case UIDeviceOrientationFaceDown:
-            NSLog(@"螢幕朝下平躺");
-            break;
-            
-            //系統無法判斷目前Device的方向，有可能是斜置
-        case UIDeviceOrientationUnknown:
-            NSLog(@"未知方向");
-            break;
-            
-        case UIDeviceOrientationLandscapeLeft:
-        {
-            CGAffineTransform transform = CGAffineTransformMakeRotation(90 * M_PI/180.0);
-            
-            [self.view setTransform:transform];
-        }
-            NSLog(@"螢幕向左橫置");
-           
-            //imgView.transform = CGAffineTransformMakeRotation((CGFloat)(-90 * M_PI / 180.0));
-            break;
-            
-        case UIDeviceOrientationLandscapeRight:
-            NSLog(@"螢幕向右橫置");
-        {
-            CGAffineTransform transform = CGAffineTransformMakeRotation(90 * M_PI/180.0);
-            
-            [self.view setTransform:transform];
-        }
-            //imgView.transform = CGAffineTransformMakeRotation((CGFloat)(90 * M_PI / 180.0));
-            break;
-            
-        case UIDeviceOrientationPortrait:
-            NSLog(@"螢幕直立");
-            break;
-            
-        case UIDeviceOrientationPortraitUpsideDown:
-            NSLog(@"螢幕直立，上下顛倒");
-            break;
-            
-        default:
-            NSLog(@"無法辨識");
-            break;
-    }
-    NSLog(@"旋转之后 ：%lf %lf",self.view.frame.size.width,self.view.frame.size.height);
-    
-    
-}
--(BOOL)shouldAutorotate {
-    return NO;
-}
+
+
 /*
 #pragma mark - Navigation
 

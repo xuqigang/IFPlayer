@@ -8,7 +8,7 @@
 
 #import "VideoCell.h"
 
-@interface VideoCell ()
+@interface VideoCell () <IFPlayerDelegate>
 {
     IFPlayer *_player;
 }
@@ -52,6 +52,7 @@
         }
         [[self.videoPreview subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         _player = [IFPlayer defaultPlayer];
+        _player.delegate = self;
         [_player addVideoPreview:self.videoPreview];
         [_player loadVideoUrl:[NSURL URLWithString:model.videoUrl]];
         [_player stop];
@@ -66,6 +67,12 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+#pragma mark IFPlayerDelegate
+- (void)player:(IFPlayer*)player playbackState:(BOOL)isPlay{
+    if(_delegate && [_delegate respondsToSelector:@selector(videoCell:didVideoStateChanged:)]){
+        [_delegate videoCell:self didVideoStateChanged:isPlay];
+    }
 }
 
 @end

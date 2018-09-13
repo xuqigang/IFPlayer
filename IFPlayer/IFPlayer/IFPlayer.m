@@ -54,10 +54,12 @@
 
 - (void)play{
     [_videoLoader play];
+    self.playerInterface.isPlaying = YES;
 }
 
 - (void)stop{
     [_videoLoader stop];
+    [self.playerInterface stop];
 }
 - (void)invalidate{
     [_videoLoader stop];
@@ -66,6 +68,7 @@
     [[self.playerInterface.contentView.layer sublayers] makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     self.playerInterface = nil;
     _videoLoader = nil;
+    self.delegate = nil;
 }
 #pragma mark - init
 - (IFPlayerInterface*)playerInterface{
@@ -89,8 +92,13 @@
         [_videoLoader pause];
     } else {
         [_videoLoader play];
+        
     }
+    
     [playerInterface setIsPlaying:_videoLoader.isPlaying];
+    if (_delegate && [_delegate respondsToSelector:@selector(player:playbackState:)]) {
+        [_delegate player:self playbackState:_videoLoader.isPlaying];
+    }
 }
 
 #pragma mark -IFVideoLoaderDelegate
@@ -136,7 +144,14 @@
         }
             break;
     
+        case UIDeviceOrientationPortraitUpsideDown:
+            self.playerInterface.fullScreen = NO;
+            break;
+        case UIDeviceOrientationPortrait:
+            self.playerInterface.fullScreen = NO;
+            break;
         default:
+            
             NSLog(@"無法辨識");
             break;
     }

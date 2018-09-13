@@ -100,7 +100,9 @@ static BOOL _isPlaying = NO;
                 [weakSelf.delegate videoLoader:weakSelf currentPlayProgress:time.value/time.timescale];
             }
         }];
-                          
+        if (_delegate && [_delegate respondsToSelector:@selector(videoLoaderStartPlayback:)]) {
+            [_delegate videoLoaderStartPlayback:self];
+        }
     }
 }
 

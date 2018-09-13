@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (nonatomic, assign) BOOL isPlaying;
 
+- (void)stop;
 - (void)showInView:(UIView*)view;
 - (void)updateCurrentTime:(NSString *)text;
 - (void)setupDuration:(NSString*)duration;

@@ -59,31 +59,23 @@
     if (_fullScreen == NO && fullScreen) {
         _fullScreen = fullScreen;
         [self removeFromSuperview];
-        UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        window.rootViewController = [UIViewController new];
-        window.windowLevel = UIWindowLevelStatusBar + 1;
-        window.backgroundColor = [UIColor blackColor];
-        window.rootViewController.view.backgroundColor = [UIColor clearColor];
-        window.rootViewController.view.userInteractionEnabled = NO;
-        window.hidden = NO;
-        window.alpha = 1;
-        _window = window;
+        //注意要隐藏状态栏， 需要再plist文件里面设置一下 View controller-based status bar appearance为NO
+        UIApplication.sharedApplication.statusBarHidden = YES;
+        _window = UIApplication.sharedApplication.delegate.window;
         [_window addSubview:self];
         [UIView animateWithDuration:0.35 animations:^{
             CGAffineTransform transform = CGAffineTransformMakeRotation(90 * M_PI/180.0);
             [self setTransform:transform];
             [self updateFrameWithSuperView];
         }];
-        
-        
     }else if (_fullScreen == YES && fullScreen == NO && _containView){
-        
         _fullScreen = fullScreen;
         [self removeFromSuperview];
         [_containView addSubview:self];
+        UIApplication.sharedApplication.statusBarHidden = NO;
         _window = nil;
         [UIView animateWithDuration:0.3 animations:^{
-            CGAffineTransform transform = CGAffineTransformMakeRotation(0 * M_PI/180.0);
+            CGAffineTransform transform = CGAffineTransformIdentity;
             [self setTransform:transform];
             [self updateFrameWithSuperView];
         }];
@@ -98,7 +90,11 @@
     _isPlaying = isPlaying;
     self.playButton.selected = isPlaying;
 }
-
+- (void)stop{
+    self.isPlaying = NO;
+    self.slider.value = 0;
+    [self updateCurrentTime:@"00:00"];
+}
 - (void)setupDuration:(NSString*)duration{
     self.slider.maximumValue = [duration floatValue];
     self.durationLabel.text = duration;

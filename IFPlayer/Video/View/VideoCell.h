@@ -9,7 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "VideoModel.h"
 #import "IFPlayer.h"
+@class VideoCell;
+
+//cell里面的点击事件，强烈建议用代理，不要用block
+@protocol VideoCellDelegate <NSObject>
+
+- (void)videoCell:(VideoCell*)videoCell didVideoStateChanged:(BOOL)isPlay;
+
+@end
+
 @interface VideoCell : UITableViewCell
+
+@property (nonatomic, weak) id<VideoCellDelegate> delegate;
 
 - (void)setupCell:(VideoModel*)model;
 
