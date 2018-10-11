@@ -113,6 +113,7 @@
 - (void)videoLoaderPlaybackFinished:(IFVideoLoader*)videoLoader{
     //修改播放界面UI
     self.playerInterface.isPlaying = NO;
+    [self.playerInterface updateCurrentTime:[NSString stringWithFormat:@"%.2f",videoLoader.duration]];
 }
 - (void)videoLoader:(IFVideoLoader*)videoLoader currentPlayProgress:(CGFloat)seconds{
     [self.playerInterface updateCurrentTime:[NSString stringWithFormat:@"%.2f",seconds]];
@@ -138,9 +139,11 @@
         case UIDeviceOrientationLandscapeRight:
             NSLog(@"螢幕向右橫置");
         {
-            if ([_videoLoader isPlaying]) {
-                self.playerInterface.fullScreen = YES;
-            }
+            
+            //思路还没想好，暂时先不支持右全屏
+//            if ([_videoLoader isPlaying]) {
+//                self.playerInterface.fullScreen = YES;
+//            }
         }
             break;
     

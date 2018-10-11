@@ -54,6 +54,7 @@
     UIView *view = [self superview];
     self.frame = view.bounds;
 }
+
 - (void)setFullScreen:(BOOL)fullScreen{
     
     if (_fullScreen == NO && fullScreen) {

@@ -94,12 +94,14 @@ static BOOL _isPlaying = NO;
         [_avplayer play];
         _isPlaying = YES;
         __weak typeof(self) weakSelf = self;
-        _progressTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        _progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            NSLog(@"---");
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(videoLoader:currentPlayProgress:)]) {
                 CMTime time = self->_avplayer.currentItem.currentTime;
                 [weakSelf.delegate videoLoader:weakSelf currentPlayProgress:time.value/time.timescale];
             }
         }];
+        [[NSRunLoop currentRunLoop] addTimer:_progressTimer forMode:NSRunLoopCommonModes];
         if (_delegate && [_delegate respondsToSelector:@selector(videoLoaderStartPlayback:)]) {
             [_delegate videoLoaderStartPlayback:self];
         }
